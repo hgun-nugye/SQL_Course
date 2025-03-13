@@ -116,6 +116,14 @@ values
 	('te001', 'NL002');  
 go
 
+insert into TuaSach (Ma_TuaSach, TuaSach, TacGia, TomTat)
+values
+	('TS001', 'Cuộc Đời Của Pi', 'Yann Martel', 'Câu chuyện về một cậu bé sống sót sau một vụ đắm tàu biển.'),
+	('TS002', '1984', 'George Orwell', 'Một tác phẩm kinh điển về xã hội kiểm soát và sự giám sát.'),
+	('TS003', 'Đắc Nhân Tâm', 'Dale Carnegie', 'Hướng dẫn về nghệ thuật giao tiếp và cách tạo mối quan hệ.'),
+	('TS004', 'Nhà Giả Kim', 'Paulo Coelho', 'Hành trình tìm kiếm giấc mơ và ý nghĩa cuộc sống.'),
+	('TS005', 'Sapiens', 'Yuval Noah Harari', 'Khảo sát lịch sử loài người từ thời nguyên thủy đến hiện đại.');
+go
 
 insert into DauSach
 values
@@ -126,14 +134,6 @@ values
 	('ISBN005', 'TS005', 'Tieng Duc', N'Cứng', 'Dang Muon');
 go
 
-insert into TuaSach (Ma_TuaSach, TuaSach, TacGia, TomTat)
-values
-	('TS001', 'Cuộc Đời Của Pi', 'Yann Martel', 'Câu chuyện về một cậu bé sống sót sau một vụ đắm tàu biển.'),
-	('TS002', '1984', 'George Orwell', 'Một tác phẩm kinh điển về xã hội kiểm soát và sự giám sát.'),
-	('TS003', 'Đắc Nhân Tâm', 'Dale Carnegie', 'Hướng dẫn về nghệ thuật giao tiếp và cách tạo mối quan hệ.'),
-	('TS004', 'Nhà Giả Kim', 'Paulo Coelho', 'Hành trình tìm kiếm giấc mơ và ý nghĩa cuộc sống.'),
-	('TS005', 'Sapiens', 'Yuval Noah Harari', 'Khảo sát lịch sử loài người từ thời nguyên thủy đến hiện đại.');
-go
 insert into DangKy
 values
 	('ISBN001', 'NL001', '2023-01-15 10:00:00', 'Đăng ký lần đầu'),
@@ -143,8 +143,6 @@ values
 	('ISBN005', 'NL005', '2023-05-18 16:00:00', 'Đăng ký lần đầu');
 go
 
-
-
 insert into Muon
 values 
 	('ISBN001', 'CS001', 'te001', '2023-01-15', '2023-02-15'),
@@ -153,6 +151,7 @@ values
 	('ISBN004', 'CS004', 'NL004', '2023-04-10', '2023-05-10'),
 	('ISBN005', 'CS005', 'NL005', '2023-05-18', '2023-06-18');
 go
+
 insert into Cuonsach
 values
 	('ISBN001', 'CS001', 'Con'),
