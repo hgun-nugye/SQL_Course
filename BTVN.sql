@@ -1,28 +1,1 @@
-﻿--Câu 71/Quản lý Sinh viên: Xóa tất cả kết quả học tập của Sinh viên 'SV002'
-use [QLSV]
-delete from [KETQUA] where MaSV='SV002';
-
---Câu 21/Quản lý Sinh viên: Có bao nhiêu Sinh viên?
-use [QLSV]
-select count(MSSV) as SoLuongSV
-from [dbo].[SINHVIEN];
-
---Câu 22/BT3:Quản lý hàng hóa: Cho biết mỗi khách hàng đã bỏ ra bao nhiêu tiền để đặt mua hàng
-use[QLHH]
-select 
-	KH.MAKHACHHANG,
-	sum(GIABAN*SOLUONG-MUCGIAMGIA) as TONGTIEN
-from [dbo].[CTDONHANG] as CTDH
-join [dbo].[DONDATHANG] as DDH 
-	on DDH.SOHOADON=CTDH.SOHOADON
-join [dbo].[KHACHHANG] as KH 
-	on DDH.MAKHACHHANG=KH.MAKHACHHANG
-GROUP BY KH.MAKHACHHANG;
-
-/*Câu 32/BT4: Quản lý Bóng đá:Khi phân công huấn luyện viên, 
-	kiểm tra vai trò của huấn luyện viên chỉ thuộc một trong các vai trò sau:
-	HLV chính, HLV phụ, HLV thể lực, HLV thủ môn.*/
-use [QLBD]
-alter table [dbo].[HLV_CLB]
-add constraint VTHLV check ([VAITRO] in (N'HLV Chính', N'HLV Phụ', N'HLV Thể lực',N'HLV Thủ môn'));
-
+﻿--Câu 71/Quản lý Sinh viên: Xóa tất cả kết quả học tập của Sinh viên 'SV002' use [QLSV] delete from [KETQUA] where MaSV='SV002';  --Câu 21/Quản lý Sinh viên: Có bao nhiêu Sinh viên? use [QLSV] select count(MSSV) as SoLuongSV from [dbo].[SINHVIEN];  --Câu 22/BT3:Quản lý hàng hóa: Cho biết mỗi khách hàng đã bỏ ra bao nhiêu tiền để đặt mua hàng use[QLHH] select  	KH.MAKHACHHANG, 	sum(GIABAN*SOLUONG*(1-MUCGIAMGIA)) as TONGTIEN from [dbo].[CTDONHANG] as CTDH join [dbo].[DONDATHANG] as DDH  	on DDH.SOHOADON=CTDH.SOHOADON join [dbo].[KHACHHANG] as KH  	on DDH.MAKHACHHANG=KH.MAKHACHHANG GROUP BY KH.MAKHACHHANG;  /*Câu 32/BT4: Quản lý Bóng đá:Khi phân công huấn luyện viên,  	kiểm tra vai trò của huấn luyện viên chỉ thuộc một trong các vai trò sau: 	HLV chính, HLV phụ, HLV thể lực, HLV thủ môn.*/ use [QLBD] alter table [dbo].[HLV_CLB] add constraint VTHLV check ([VAITRO] in (N'HLV Chính', N'HLV Phụ', N'HLV Thể lực',N'HLV Thủ môn'));  -- baitap2 - câu 33 (106) - Thêm vào quan hệ PHANCONG các bộ là đề án mà NV3 chưa được phân công insert into PHANCONG (MANV, MADA, THOIGIAN) select  'NV3', da.[MADA], null from [dbo].[DEAN] da left join [dbo].[PHANCONG] pc on da.[MADA]=pc.[MADA] where da.[MADA] is null;  --QLDA 33.  insert into PHANCONG (MANV, MADA, THOIGIAN) select  'NV3', DA.MADA, null from [dbo].[DEAN] DA where DA.MADA not in ( 	select PC.MADA from PHANCONG PC where PC.MANV = 'NV3' ) --Bài 1.28:Cho biết mã, tên, địa chỉ và điểm trung bình của từng sinh viên.  SELECT    sv.[MSSV],sv.[Ten],sv.[DiaChi],   (sum((kq.[Diem])*mh.[SoTC])/sum(mh.[SoTC])) AS Diem  FROM     [dbo].[SINHVIEN] sv JOIN     [dbo].[KETQUA] kq ON sv.[MSSV]=kq.[MaSV] join  	[dbo].[GIANGDAY] gd on gd.MaKhoaHoc=kq.MaKhoaHoc join [dbo].[MONHOC] mh on mh.MaMH=gd.MaMH  GROUP BY     sv.[MSSV],sv.[Ten],sv.[DiaChi]  ---QLTV_11: Tính số cuốn sách trung bình mỗi độc giả đã mượn.. SELECT  AVG(SoLuong) AS SoLuongSachTB From ( 	SELECT dg.[Ma_DocGia], 1.0*COUNT(*) AS SoLuong 	FROM [dbo].[DocGia] dg join [dbo].[Muon] m 	on dg.[Ma_DocGia]=m.[Ma_DocGia] 	GROUP BY dg.[Ma_DocGia] ) as TBMuonSach;  --OR select count([ISBN]) *1.0 /count(distinct [Ma_DocGia]) as SLSachMuonTB from [dbo].[Muon]  --Câu 61: Cho biết tên những giáo viên tham gia dạy đầy đủ tất cả các môn học SELECT TenGV FROM GIANGDAY GD1,GIAOVIEN GV WHERE GD1.MaGV=GV.MaGV AND NOT EXISTS( 	SELECT * 	FROM MONHOC MH 	WHERE NOT EXISTS( 		SELECT * 		FROM GIANGDAY GD2 		WHERE GD2.MaMH=MH.MaMH AND GD1.MaGV=GD2.MaGV 	) )  --QLTV-25. Lấy danh sách độc giả chỉ đăng ký nhưng chưa mượn sách  SELECT * FROM DocGia DG LEFT JOIN DangKy DK ON DG.Ma_DocGia = DK.Ma_DocGia LEFT JOIN Muon M ON DK.ISBN = M.ISBN AND DK.Ma_DocGia = M.Ma_DocGia WHERE M.ISBN IS NULL;
