@@ -64,12 +64,6 @@ HO+' '+TEN AS TEN_NHAN_VIEN,
 LUONGCOBAN + PHUCAP AS TONGLUONG 
 FROM NHANVIEN
 
---CÂU 40: Cho biết tên của môn học có số tín chỉ nhiều nhất                                                                    
-SELECT K.TenKhoa,GD.MaKhoaHoc
-FROM GIANGDAY GD
-JOIN GIAOVIEN GV ON GD.MaGV = GV.MaGV
-JOIN KHOA K ON GV.MaKhoa = K.MaKhoa;
-
 --Câu 33: cập nhật giá trị của trường NOIGIAOHANG bằng địa chỉ của khách hàng đối với những đơn hàng chưa xác định được nơi giao hàng( giá thị trường NOIGIAOHANG bằng NULL)                                                                                                                                                                                             UPDATE DONDATHANG
 SET NOIGIAOHANG = KHACHHANG.DIACHI
 FROM DONDATHANG
@@ -86,29 +80,29 @@ GROUP BY [SOHOADON];
 select mahang, tenhang from mathang where giahang > 100000 and  soluong < 50;
 
 --Cau 35: Tăng lương lên gấp rưỡi cho những nhân viên bán được số lượng hàng nhiều hơn 100 trong năm 2018..
-SELECT MaNV, SUM(SoLuong) AS TongSoLuong
-FROM DONDATHANG
-WHERE YEAR(NgayDatHang)= 2018
-GROUP BY MaNV;
+SELECT [MANHANVIEN], SUM([dbo].[CTDONHANG].[SOLUONG]) AS TongSoLuong
+FROM DONDATHANG, [dbo].[CTDONHANG] 
+WHERE YEAR([NGAYDATHANG])= 2018
+GROUP BY [MANHANVIEN];
 
 UPDATE NHANVIEN
-SET LuongNV = LuongNV *1.5
-WHERE MaNV IN (
-	SELECT MaNV
-	FROM DONDATHANG
-	WHERE YEAR(NgayDatHang) = 2018
-	GROUP BY MaNV
-	HAVING SUM(SoLuong) > 100
+SET [LUONGCOBAN] =[LUONGCOBAN]  *1.5
+WHERE [MANHANVIEN] IN (
+	SELECT [MANHANVIEN]
+	FROM DONDATHANG, [dbo].[CTDONHANG]
+	WHERE YEAR([NGAYDATHANG]) = 2018
+	GROUP BY [MANHANVIEN]
+	HAVING SUM([dbo].[CTDONHANG].[SOLUONG]) > 100
 );
 
---Câu43 :Xóa khỏi bảng MATHANG những mặt hàng có số lượng bằng 0 và không được đặt mua trong bất kỳ dơn mặt hàng nào                                                                                                                                                                 
+--Câu 43:Xóa khỏi bảng MATHANG những mặt hàng có số lượng bằng 0 và không được đặt mua trong bất kỳ dơn mặt hàng nào                                                                                                                                                                 
 DELETE  FROM  mathang  
 WHERE  soluong=0  AND    NOT  EXISTS 
 	(SELECT sohoadon 
 	FROM chitietdathang WHERE 
 	mahang=mathang.mahang)
 
---Câu38: Giả sử trong bảng DONDATHANG có thêm trường SOTIEN cho biết số tiền mà khách hàng phải trả cho mỗi đơn đặt hàng. Hãy tính giá trị cho trường này.                                                                                                                                     Thêm cột sotien                                                                                                                                                                                         ALTER TABLE DONDATHANG ADD SOTIEN MONEY;                                                                                                                               Tính giá trị                                                                                                                                                 
+--Câu 38: Giả sử trong bảng DONDATHANG có thêm trường SOTIEN cho biết số tiền mà khách hàng phải trả cho mỗi đơn đặt hàng. Hãy tính giá trị cho trường này.                                                                                                                                     Thêm cột sotien                                                                                                                                                                                         ALTER TABLE DONDATHANG ADD SOTIEN MONEY;                                                                                                                               Tính giá trị                                                                                                                                                 
 UPDATE DONDATHANG
 SET SOTIEN = (
     SELECT SUM(CTDATHANG.SOLUONG * CTDATHANG.GIABAN * (1 - CTDATHANG.MUCGIAMGIA / 100))
@@ -153,7 +147,7 @@ WHERE MANV NOT IN (
 Select MH. TENHANG
 From MATHANG MH
 Join NHACUNGCAP NCC On MH. MACONGTY=NCC. MACONGTY
-Where NCC. TENCONGTY= ‘Việt Tiến’;
+Where NCC. TENCONGTY= 'Việt Tiến';
 
 --Câu 17: Những mặt hàng nào chưa từng được khách hàng đặt mua ?
 SELECT M.MAHANG, M.TENHANG
