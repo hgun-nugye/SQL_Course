@@ -79,11 +79,11 @@ values
 
 insert into KHAM_BENH
 values
-	('BS01', 'BN05', '2000-12-10', N'BÌNH THƯỜNG'),
+	('BS01', 'BN01', '2000-12-10', N'BÌNH THƯỜNG'),
 	('BS02', 'BN05', '2000-12-10', N'BÌNH THƯỜNG'),
 	('BS03', 'BN05', '2000-12-10', N'BÌNH THƯỜNG'),
-	('BS04', 'BN05', '2000-12-10', N'BÌNH THƯỜNG'),
-	('BS05', 'BN05', '2000-12-10', N'BÌNH THƯỜNG'),
+	('BS04', 'BN03', '2000-12-10', N'BÌNH THƯỜNG'),
+	('BS05', 'BN01', '2000-12-10', N'BÌNH THƯỜNG'),
 	('BS02', 'BN02', '2023-12-12', N'NẶNG'),
 	('BS03', 'BN03', '2024-11-10', N'BÌNH THƯỜNG'),
 	('BS04', 'BN04', '2025-11-15', N'BÌNH THƯỜNG'),
@@ -136,8 +136,12 @@ where bs.MSBS=kb.MSBS and year([NgayKham])=2023
 group by bs.[MSBS]
 
 --Cau2.d: Xoa nhung benh nhan chua tung kham benh trong 10 nam gan day
-delete from [dbo].[KHAM_BENH]
-where datediff(yyyy, getdate(),[NgayKham])>10;
+DELETE FROM [dbo].[BENH_NHAN]
+WHERE MSBN NOT IN (
+    SELECT DISTINCT MSBN
+    FROM [dbo].[KHAM_BENH]
+    WHERE [NgayKham] >= DATEADD(year, -10, GETDATE())
+);
 
 
 

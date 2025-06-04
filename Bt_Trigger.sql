@@ -4,14 +4,10 @@ create function HoTenNV
 returns nvarchar(60)
 as
 begin
-	declare @Ho nvarchar(20),@Tenlot nvarchar(20), @Ten nvarchar(20)
-	select 
-	@Ho=[HONV],
-	@Tenlot=[TENLOT],
-	@Ten=[TENNV]
-	from [dbo].[NHANVIEN]
-	where MANV=@MANV
-	return @Ho + ' ' + @Tenlot+ ' '+ @Ten;
-end;
+	return
+	( select NV.[HONV] +' '+ NV.[TENLOT] +' '+ NV.[TENNV] as N'Họ và tên'
+	from [dbo].[NHANVIEN] NV
+	where MANV=@MANV)
+end
 
-select [dbo].[HoTenNV]('NV5') as HovaTen;
+select [dbo].[HoTenNV]('NV1') as HovaTen;

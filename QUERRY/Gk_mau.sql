@@ -226,7 +226,7 @@ BEGIN
     RETURN @TongPhong;
 END;
 go
-select dbo.TongPhong('KH1') as TONGSOPHONGDAT
+select dbo.TongPhong('KH3') as TONGSOPHONGDAT
 
 
 --10.Tạo trigger kiểm tra số người đặt phòng không vượt quá 4 người cho loại phòng tiêu chuẩn.
@@ -247,7 +247,20 @@ begin
 		end
 end;
 go
+create trigger check_Songuoi
+on [dbo].[DatPhong]
+for update
+as
+begin
+	if exists (select 1 
+				from DatPhong DP, Phong where  DP.MaPhong=Phong.MaPhong and SoNguoi>4 and Phong.LoaiPhong='Thuong')
+	begin
+		rollback tran
+		print (N'Khong duoc vuot qua 4 nguoi cho phong thuong')
+	end
+end
+
 INSERT INTO DatPhong
 VALUES
-    ('DP10', 'KH1', 'P1', '2023-12-10', '2023-12-15', 10),
-    ('DP12', 'KH3', 'P1', '2021-12-10', '2021-12-15', 5);
+    ('DP10', 'KH1', 'P5', '2023-12-10', '2023-12-15', 10),
+    ('DP12', 'KH3', 'P5', '2021-12-10', '2021-12-15', 5);
